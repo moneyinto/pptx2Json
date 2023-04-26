@@ -1,0 +1,21 @@
+{
+    "name": "pptx2json",
+    "version": "1.0.0",
+    "description": "",
+    "main": "index.js",
+    "scripts": {
+        "dev": "vite"
+    },
+    "author": "",
+    "license": "ISC",
+    "type": "module",
+    "devDependencies": {
+        "@types/node": "^18.16.1",
+        "typescript": "^5.0.4",
+        "vite": "^4.3.2"
+    },
+    "dependencies": {
+        "jszip": "^3.10.1",
+        "x2js": "^3.4.4"
+    }
+}
