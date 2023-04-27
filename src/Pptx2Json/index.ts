@@ -5,7 +5,7 @@ import Slide from "./Slide";
 import { ISlide } from "./types/slide";
 
 export default class Pptx2Json {
-    public slides: any[] = [];
+    public slides: ISlide[] = [];
     constructor() {
         
     }

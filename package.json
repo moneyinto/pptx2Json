@@ -2,9 +2,18 @@
     "name": "pptx2json",
     "version": "1.0.0",
     "description": "",
-    "main": "index.js",
+    "main": "build/index.js",
+    "types": "build/index.d.ts",
+    "files": [
+        "build/"
+    ],
     "scripts": {
-        "dev": "vite"
+        "dev": "vite",
+        "build-bundle": "tsc"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git@github.com:moneyinto/pptx2Json.git"
     },
     "author": "",
     "license": "ISC",
