@@ -22,7 +22,9 @@
         "lib": ["esnext", "dom", "dom.iterable", "scripthost"]
     },
     "include": [
-        "src/Pptx2Json/*.ts"
+        "src/AnalyzePPTX/*.ts",
+        "src/AnalyzePPTX/types/*.d.ts",
+        "src/*.d.ts"
     ],
     "exclude": ["node_modules"]
 }

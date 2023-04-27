@@ -32,5 +32,6 @@ export default class GradFill {
     get type() {
         if (this._gradFill.lin) return "linear";
         if (this._gradFill.path) return "radial"
+        return "linear";
     }
 }

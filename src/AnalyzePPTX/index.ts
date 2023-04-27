@@ -4,7 +4,7 @@ import Theme from "./Theme";
 import Slide from "./Slide";
 import { ISlide } from "./types/slide";
 
-export default class Pptx2Json {
+export default class AnalyzePPTX {
     public slides: ISlide[] = [];
     constructor() {
         

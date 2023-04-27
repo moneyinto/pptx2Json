@@ -1,5 +1,5 @@
 {
-    "name": "pptx2json",
+    "name": "analyze-pptx",
     "version": "1.0.0",
     "description": "",
     "main": "build/index.js",
