@@ -1,7 +1,7 @@
 {
     "compilerOptions": {
-        "target": "es5",
-        "module": "commonjs",
+        "target": "ESNext",
+        "module": "ESNext",
         "declaration": true,
         "outDir": "./build",
         "strict": false,
@@ -23,8 +23,7 @@
     },
     "include": [
         "src/AnalyzePPTX/*.ts",
-        "src/AnalyzePPTX/types/*.d.ts",
-        "src/*.d.ts"
+        "src/AnalyzePPTX/types/*.d.ts"
     ],
     "exclude": ["node_modules"]
 }
