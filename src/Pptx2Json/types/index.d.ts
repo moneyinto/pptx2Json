@@ -3,6 +3,12 @@ export interface ISchemeClr {
     alpha?: {
         _val: string;
     };
+    lumMod?: {
+        _val: string;
+    };
+    lumOff?: {
+        _val: string;
+    };
 }
 
 export interface ISolidFill {
@@ -17,7 +23,7 @@ export interface IBlipFill {
         fillRect: {
             _l: string;
             _r: string;
-        }
+        };
     };
     tile?: {
         _algn: "tl" | "t" | "tr" | "l" | "ctr" | "r" | "bl" | "b" | "br";
@@ -29,9 +35,25 @@ export interface IBlipFill {
     };
 }
 
+export interface IGS {
+    _pos: string;
+    schemeClr: ISchemeClr;
+}
+
+export interface IGradFill {
+    gsLst: {
+        gs: IGS[];
+    };
+    lin: {
+        _ang: string;
+        _scaled: string;
+    };
+}
+
 export interface IBgPr {
     solidFill?: ISolidFill;
     blipFill?: IBlipFill;
+    gradFill?: IGradFill;
 }
 
 export interface IBg {

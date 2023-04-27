@@ -18,6 +18,10 @@ export default class Background {
             this._blipFill = new BlipFill(bg.bgPr.blipFill, this._relationships);
             this._type = "image";
         }
+
+        if (bg.bgPr.gradFill) {
+            this._type = "gradient";
+        }
     }
 
     get type() {
