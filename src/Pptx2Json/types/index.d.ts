@@ -12,7 +12,8 @@ export interface ISchemeClr {
 }
 
 export interface ISolidFill {
-    schemeClr: ISchemeClr;
+    schemeClr?: ISchemeClr;
+    srgbClr?: ISchemeClr;
 }
 
 export interface IBlipFill {
@@ -44,9 +45,17 @@ export interface IGradFill {
     gsLst: {
         gs: IGS[];
     };
-    lin: {
+    lin?: {
         _ang: string;
         _scaled: string;
+    };
+    path?: {
+        fillToRect: {
+            _b: string;
+            _l: string;
+            _r: string;
+            _t: string;
+        };
     };
 }
 

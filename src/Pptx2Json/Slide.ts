@@ -36,6 +36,12 @@ export default class Slide {
                 background.image = `data:image/${fileExt};base64,` + image;
                 background.imageSize = !!bg.stretch ? "cover" : "repeat";
             }
+
+            if (bg.type === "gradient") {
+                background.gradientColor = bg.gradientColor;
+                background.gradientType = bg.gradientType;
+                background.gradientRotate = bg.gradientRotate;
+            }
         }
         return {
             id: this._index,

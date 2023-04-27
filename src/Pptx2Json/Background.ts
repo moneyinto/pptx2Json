@@ -1,16 +1,18 @@
 import { IBg, IRelationship } from "./types";
 import SolidFill from "./SolidFill";
 import BlipFill from "./BlipFill";
+import GradFill from "./GradFill";
 
 export default class Background {
     private _type: "solid" | "image" | "gradient" = "solid";
     private _solidFill: SolidFill | null = null;
     private _blipFill: BlipFill | null = null;
+    private _gradFill: GradFill | null = null;
     private _relationships: IRelationship[];
     constructor(bg: IBg, theme: any, relationships: IRelationship[]) {
         this._relationships = relationships;
         if (bg.bgPr.solidFill) {
-            this._solidFill = new SolidFill(bg.bgPr.solidFill, theme) 
+            this._solidFill = new SolidFill(bg.bgPr.solidFill, theme);
             this._type = "solid";
         }
 
@@ -20,6 +22,8 @@ export default class Background {
         }
 
         if (bg.bgPr.gradFill) {
+            console.log(bg.bgPr.gradFill);
+            this._gradFill = new GradFill(bg.bgPr.gradFill, theme);
             this._type = "gradient";
         }
     }
@@ -29,11 +33,24 @@ export default class Background {
     }
 
     get color() {
-        return this._solidFill?.value || "";
+        return this._solidFill?.color || "";
+    }
+
+    get gradientColor() {
+        // 渐变色暂时只取 pos 0 和 100000 的颜色值
+        return this._gradFill?.color.filter(c => c.pos === "0" || c.pos === "100000").map(c => c.value) || ["", ""];
+    }
+
+    get gradientType() {
+        return this._gradFill.type;
+    }
+
+    get gradientRotate() {
+        return this._gradFill.rotate;
     }
 
     get imageSrc() {
-        return this._blipFill?.value.replace("..", "ppt") || "";
+        return this._blipFill?.src.replace("..", "ppt") || "";
     }
 
     get stretch() {

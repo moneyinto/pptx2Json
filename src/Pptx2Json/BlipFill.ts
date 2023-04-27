@@ -8,7 +8,7 @@ export default class BlipFill {
         this._relationships = relationships;
     }
 
-    get value() {
+    get src() {
         const embed = this._blipFill.blip["_r:embed"];
         const relationship = this._relationships.find(r => r._Id === embed);
         return relationship?._Target || "";

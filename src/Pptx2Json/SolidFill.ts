@@ -3,6 +3,6 @@ import { ISolidFill } from "./types";
 
 export default class SolidFill extends Color {
     constructor(solidFill: ISolidFill, theme: any) {
-        super(solidFill.schemeClr, theme);
+        super(solidFill, theme);
     }
 }
