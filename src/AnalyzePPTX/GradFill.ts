@@ -1,10 +1,10 @@
 import SolidFill from "./SolidFill";
-import { IGradFill } from "./types";
+import { IGradFill, ITheme } from "./types";
 
 export default class GradFill {
     private _gradFill: IGradFill;
     private _theme: any;
-    constructor(gradFill: IGradFill, theme: any) {
+    constructor(gradFill: IGradFill, theme: ITheme) {
         this._gradFill = gradFill;
         this._theme = theme;
     }

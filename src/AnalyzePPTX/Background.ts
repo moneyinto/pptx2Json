@@ -1,4 +1,4 @@
-import { IBg, IRelationship } from "./types";
+import { IBg, IRelationship, ITheme } from "./types";
 import SolidFill from "./SolidFill";
 import BlipFill from "./BlipFill";
 import GradFill from "./GradFill";
@@ -9,7 +9,7 @@ export default class Background {
     private _blipFill: BlipFill | null = null;
     private _gradFill: GradFill | null = null;
     private _relationships: IRelationship[];
-    constructor(bg: IBg, theme: any, relationships: IRelationship[]) {
+    constructor(bg: IBg, theme: ITheme, relationships: IRelationship[]) {
         this._relationships = relationships;
         if (bg.bgPr.solidFill) {
             this._solidFill = new SolidFill(bg.bgPr.solidFill, theme);

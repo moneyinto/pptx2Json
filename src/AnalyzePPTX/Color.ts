@@ -1,10 +1,10 @@
-import { ISolidFill } from "./types";
+import { ISolidFill, ITheme } from "./types";
 
 export default class Color {
     public color = "";
     private _val = "";
     private _alpha = "";
-    constructor(solidFill: ISolidFill, theme: any) {
+    constructor(solidFill: ISolidFill, theme: ITheme) {
         if (solidFill.schemeClr) {
             // 后面考虑处理lumMod lumOff
             this._val = solidFill.schemeClr._val;

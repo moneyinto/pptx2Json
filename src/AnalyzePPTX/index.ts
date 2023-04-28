@@ -28,7 +28,7 @@ export default class AnalyzePPTX {
             }
         }
         
-        const themeXML = xml["ppt/theme/theme1.xml"];
+        const themeXML= xml["ppt/theme/theme1.xml"];
         const theme = new Theme(themeXML).theme;
 
         const slides: ISlide[] = [];
@@ -37,7 +37,7 @@ export default class AnalyzePPTX {
             if (/ppt\/slides\/slide[\d]+.xml$/.test(key)) {
                 const n = /\d+/.exec(key)![0];
                 const relKey = `ppt/slides/_rels/slide${n}.xml.rels`;
-                const slide = new Slide(xml[key], xml[relKey], theme, n, zip);
+                const slide = new Slide(xml[key].sld, xml[relKey], theme, n, zip);
                 const result: ISlide = await slide.getSlide();
                 slides.push(result);
             }

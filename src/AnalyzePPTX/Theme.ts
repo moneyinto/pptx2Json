@@ -1,6 +1,8 @@
+import { ITheme } from "./types";
+
 export default class Theme {
-    private _theme;
-    constructor(themeXML: any) {
+    private _theme: ITheme;
+    constructor(themeXML: { theme: { themeElements: ITheme } }) {
         this._theme = themeXML.theme.themeElements;
     }
 
