@@ -12,7 +12,11 @@ export default class GradFill {
     get color() {
         return this._gradFill.gsLst.gs.map((c) => {
             const solidFill = new SolidFill(c, this._theme);
-            const color = solidFill.color;
+            let color = solidFill.color;
+            if (solidFill.alpha) {
+                const alpha = +solidFill.alpha / 100000;
+                color = (this.color + Math.floor(255 * alpha).toString(16)).toLocaleUpperCase();
+            }
             if (!color) {
                 return {};
             }

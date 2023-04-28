@@ -3,6 +3,9 @@ import JSZip from "jszip";
 import Background from "./Background";
 import { IRelationship, ITheme, IXSlide } from "./types";
 import { ISlideBackground } from "./types/slide";
+import Shapes from "./Shapes";
+import { IPPTElement } from "./types/element";
+import { createRandomCode } from "./util";
 
 export default class Slide {
     private _slide: IXSlide;
@@ -12,7 +15,6 @@ export default class Slide {
     private _zip: JSZip;
     constructor(slide: IXSlide, slideRel: { Relationships: { Relationship: IRelationship[] } }, theme: ITheme, index: string, zip: JSZip) {
         this._slide = slide;
-        console.log(slideRel);
         this._relationships = slideRel.Relationships.Relationship;
         this._theme = theme;
         this._index = index;
@@ -45,11 +47,19 @@ export default class Slide {
             }
         }
 
-        console.log(this._slide);
+        let elements: IPPTElement[] = [];
+        if (this._slide.cSld.spTree.sp) {
+            const sps = new Shapes(this._slide.cSld.spTree.sp, this._theme);
+
+            elements = elements.concat(sps.shapes);
+        }
+
+        // index 保留 看看后面需不需要排序
+        console.log(this._slide, this._index);
         return {
-            id: this._index,
-            elements: [],
-            background
+            id: createRandomCode(),
+            elements,
+            ...background ? { background } : {}
         };
     }
 }

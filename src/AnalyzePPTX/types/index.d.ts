@@ -149,8 +149,9 @@ interface IPrstGeom {
 }
 
 interface ISpPr {
-    prstGeom: {};
+    prstGeom: IPrstGeom;
     xfrm: IXfrm;
+    solidFill?: ISolidFill;
 }
 
 interface IEffectRef {
@@ -189,7 +190,7 @@ interface ITxBody {
     };
 }
 
-interface ISp {
+export interface ISp {
     nvSpPr: INvSpPr;
     spPr: ISpPr;
     style: IStyle;
@@ -209,7 +210,7 @@ interface IGrpSpPr {
 interface ISpTree {
     grpSpPr: IGrpSpPr;
     nvGrpSpPr: INvGrpSpPr;
-    sp: ISp | ISp[];
+    sp?: ISp | ISp[];
 }
 
 interface ICSld {

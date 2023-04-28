@@ -22,7 +22,6 @@ export default class Background {
         }
 
         if (bg.bgPr.gradFill) {
-            console.log(bg.bgPr.gradFill);
             this._gradFill = new GradFill(bg.bgPr.gradFill, theme);
             this._type = "gradient";
         }
@@ -33,7 +32,13 @@ export default class Background {
     }
 
     get color() {
-        return this._solidFill?.color || "";
+        let color = this._solidFill.color;
+        if (this._solidFill.alpha) {
+            const alpha = +this._solidFill.alpha / 100000;
+            color = (this.color + Math.floor(255 * alpha).toString(16)).toLocaleUpperCase();
+        }
+        
+        return color || "";
     }
 
     get gradientColor() {
