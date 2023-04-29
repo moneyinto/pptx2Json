@@ -136,7 +136,9 @@ interface ICNvPr {
     _name: string;
 }
 
-interface ICNvSpPr {}
+interface ICNvSpPr {
+    spLocks?: {};
+}
 
 interface INvPr {}
 

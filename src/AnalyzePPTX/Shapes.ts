@@ -68,6 +68,9 @@ export default class Shapes {
                 shape: SHAPE_TYPE[sp.spPr.prstGeom._prst] || "rect"
             };
 
+            // 锁定形状纵横比
+            if (sp.nvSpPr.cNvSpPr.spLocks) shape.fixedRatio = true;
+
             const style = new Style(sp.style, this._theme);
             // 填充色
             if (!sp.spPr.noFill) {
