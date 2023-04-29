@@ -1,6 +1,6 @@
 {
     "name": "analyze-pptx",
-    "version": "1.0.1",
+    "version": "1.0.3",
     "description": "",
     "main": "build/index.js",
     "types": "build/index.d.ts",

@@ -126,8 +126,7 @@ export default class Shapes {
             if (sp.spPr.effectLst) {
                 const outerShdw = sp.spPr.effectLst.outerShdw;
                 const shapeColor = new Color(outerShdw, this._theme)
-                const opacity = +shapeColor.alpha / 1000;
-                const color = (shapeColor.color + Math.floor(255 * opacity).toString(16)).toLocaleUpperCase();
+                const color = (shapeColor.color + Math.floor(255 * +shapeColor.alpha / 100000).toString(16)).toLocaleUpperCase();
                 const degree = Angle2Degree(+outerShdw._dir || 0);
                 const distance = EMU2PIX(outerShdw._dist || 0);
                 const h = distance * Math.sin((90 - degree) / 180 * Math.PI);
