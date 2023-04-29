@@ -105,6 +105,11 @@ export default class Shapes {
                 }
             }
 
+            // 水平翻转
+            if (sp.spPr.xfrm._flipH) shape.flipH = -1;
+            // 垂直翻转
+            if (sp.spPr.xfrm._flipV) shape.flipV = -1;
+
             shapes.push(shape);
         }
         return shapes;

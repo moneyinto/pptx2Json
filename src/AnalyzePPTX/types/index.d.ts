@@ -127,6 +127,8 @@ interface IXfrm {
     ext: { _cx: string; _cy: string };
     off: { _x: string; _y: string };
     _rot?: string;
+    _flipH?: string;
+    _flipV?: string;
 }
 
 interface ICNvPr {
