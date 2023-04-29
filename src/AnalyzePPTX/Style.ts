@@ -16,4 +16,12 @@ export default class Style {
         }
         return "";
     }
+
+    get ln() {
+        if (this._style.lnRef) {
+            const solidFill = new SolidFill(this._style.lnRef as ISolidFill, this._theme);
+            return solidFill.color;
+        }
+        return "";
+    }
 }

@@ -126,6 +126,7 @@ interface IXfrm {
     chOff?: { _x: string; _y: string };
     ext: { _cx: string; _cy: string };
     off: { _x: string; _y: string };
+    _rot?: string;
 }
 
 interface ICNvPr {
@@ -149,6 +150,12 @@ interface IPrstGeom {
 }
 
 interface ISpPr {
+    ln?: {
+        noFill?: {};
+        solidFill?: ISolidFill;
+        _w?: string;
+    };
+    noFill?: {};
     prstGeom: IPrstGeom;
     xfrm: IXfrm;
     solidFill?: ISolidFill;

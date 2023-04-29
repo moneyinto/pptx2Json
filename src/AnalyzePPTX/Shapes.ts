@@ -62,23 +62,46 @@ export default class Shapes {
                 top: EMU2PIX(sp.spPr.xfrm.off._y),
                 width: EMU2PIX(sp.spPr.xfrm.ext._cx),
                 height: EMU2PIX(sp.spPr.xfrm.ext._cy),
-                rotate: 0,
+                rotate: Math.floor(+(sp.spPr.xfrm._rot || "0") / 60000),
                 type: "shape",
                 name: sp.nvSpPr.cNvPr._name,
                 shape: SHAPE_TYPE[sp.spPr.prstGeom._prst] || "rect"
             };
 
             const style = new Style(sp.style, this._theme);
-            if (sp.spPr.solidFill) {
-                const solidFill = new SolidFill(sp.spPr.solidFill, this._theme);
-                const opacity = +solidFill.alpha / 1000;
-                shape.fill = {
-                    color: solidFill.color,
-                    opacity
+            // 填充色
+            if (!sp.spPr.noFill) {
+                if (sp.spPr.solidFill) {
+                    const solidFill = new SolidFill(sp.spPr.solidFill, this._theme);
+                    const opacity = +solidFill.alpha / 1000;
+                    shape.fill = {
+                        color: solidFill.color,
+                        opacity
+                    }
+                } else {
+                    shape.fill = {
+                        color: style.fill
+                    }
+                }
+            }
+
+            // 边框线
+            if (sp.spPr.ln) {
+                const ln = sp.spPr.ln;
+                if (!ln.noFill && ln.solidFill) {
+                    const solidFill = new SolidFill(ln.solidFill, this._theme);
+                    const opacity = +solidFill.alpha / 1000;
+                    const width = EMU2PIX(ln._w || "12700");
+                    shape.outline = {
+                        color: solidFill.color,
+                        opacity,
+                        width
+                    }
                 }
             } else {
-                shape.fill = {
-                    color: style.fill
+                shape.outline = {
+                    color: style.ln,
+                    width: EMU2PIX("12700")
                 }
             }
 

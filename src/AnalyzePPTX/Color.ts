@@ -3,7 +3,7 @@ import { ISolidFill, ITheme } from "./types";
 export default class Color {
     public color = "";
     private _val = "";
-    public alpha = "";
+    public alpha = "100000";
     constructor(solidFill: ISolidFill, theme: ITheme) {
         if (solidFill.schemeClr) {
             // 后面考虑处理lumMod lumOff
