@@ -35,7 +35,7 @@ export default class Background {
         let color = this._solidFill.color;
         if (this._solidFill.alpha) {
             const alpha = +this._solidFill.alpha / 100000;
-            color = (this.color + Math.floor(255 * alpha).toString(16)).toLocaleUpperCase();
+            color = (color + Math.floor(255 * alpha).toString(16)).toLocaleUpperCase();
         }
         
         return color || "";

@@ -15,7 +15,7 @@ export default class GradFill {
             let color = solidFill.color;
             if (solidFill.alpha) {
                 const alpha = +solidFill.alpha / 100000;
-                color = (this.color + Math.floor(255 * alpha).toString(16)).toLocaleUpperCase();
+                color = (color + Math.floor(255 * alpha).toString(16)).toLocaleUpperCase();
             }
             if (!color) {
                 return {};
