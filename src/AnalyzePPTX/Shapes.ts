@@ -1,8 +1,9 @@
+import Color from "./Color";
 import SolidFill from "./SolidFill";
 import Style from "./Style";
 import { ISp, ITheme } from "./types";
 import { IPPTShapeElement } from "./types/element";
-import { EMU2PIX, createRandomCode } from "./util";
+import { Angle2Degree, EMU2PIX, createRandomCode } from "./util";
 
 export enum SHAPE_TYPE {
     rect = "rect",
@@ -112,6 +113,25 @@ export default class Shapes {
             if (sp.spPr.xfrm._flipH) shape.flipH = -1;
             // 垂直翻转
             if (sp.spPr.xfrm._flipV) shape.flipV = -1;
+
+            // 阴影
+            if (sp.spPr.effectLst) {
+                const outerShdw = sp.spPr.effectLst.outerShdw;
+                const shapeColor = new Color(outerShdw, this._theme)
+                const opacity = +shapeColor.alpha / 1000;
+                const color = (shapeColor.color + Math.floor(255 * opacity).toString(16)).toLocaleUpperCase();
+                const degree = Angle2Degree(+outerShdw._dir || 0);
+                const distance = EMU2PIX(outerShdw._dist || 0);
+                const h = distance * Math.sin((90 - degree) / 180 * Math.PI);
+                const v = distance * Math.sin(degree / 180 * Math.PI);
+                console.log(h,v,degree);
+                shape.shadow = {
+                    color,
+                    h,
+                    v,
+                    blur: EMU2PIX(outerShdw._blurRad || 0)
+                }
+            }
 
             shapes.push(shape);
         }

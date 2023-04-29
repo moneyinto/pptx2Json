@@ -22,3 +22,5 @@ export const EMU2PIX = (emus) => {
 
     return Pt2PIX(+emus / 12700);
 };
+
+export const Angle2Degree = (angle = 0) => Math.round(angle / 60000);

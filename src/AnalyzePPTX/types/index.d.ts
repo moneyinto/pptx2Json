@@ -13,9 +13,11 @@ export interface ISchemeClr {
     };
 }
 
+type ISrgbClr = ISchemeClr;
+
 export interface ISolidFill {
     schemeClr?: ISchemeClr;
-    srgbClr?: ISchemeClr;
+    srgbClr?: ISrgbClr;
 }
 
 export interface IBlipFill {
@@ -153,6 +155,15 @@ interface IPrstGeom {
     _prst: string;
 }
 
+interface IOuterShdw {
+    srgbClr: ISrgbClr;
+    _algn: IAlgn;
+    _blurRad: string;
+    _dir: string;
+    _dist: string;
+    _rotWithShape: string;
+}
+
 interface ISpPr {
     ln?: {
         noFill?: {};
@@ -163,6 +174,9 @@ interface ISpPr {
     prstGeom: IPrstGeom;
     xfrm: IXfrm;
     solidFill?: ISolidFill;
+    effectLst?: {
+        outerShdw: IOuterShdw;
+    };
 }
 
 interface IEffectRef {
