@@ -174,6 +174,7 @@ interface ISpPr {
     prstGeom: IPrstGeom;
     xfrm: IXfrm;
     solidFill?: ISolidFill;
+    gradFill?: IGradFill;
     effectLst?: {
         outerShdw: IOuterShdw;
     };

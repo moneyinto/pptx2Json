@@ -1,4 +1,5 @@
 import Color from "./Color";
+import GradFill from "./GradFill";
 import SolidFill from "./SolidFill";
 import Style from "./Style";
 import { ISp, ITheme } from "./types";
@@ -82,6 +83,13 @@ export default class Shapes {
                         color: solidFill.color,
                         opacity
                     }
+                } else if (sp.spPr.gradFill) {
+                    const gradFill = new GradFill(sp.spPr.gradFill, this._theme);
+                    shape.gradient = {
+                        type: gradFill.type,
+                        color: gradFill.color.filter(c => c.pos === "0" || c.pos === "100000").map(c => c.value) || ["", ""],
+                        rotate: gradFill.rotate
+                    }
                 } else {
                     shape.fill = {
                         color: style.fill
@@ -124,7 +132,6 @@ export default class Shapes {
                 const distance = EMU2PIX(outerShdw._dist || 0);
                 const h = distance * Math.sin((90 - degree) / 180 * Math.PI);
                 const v = distance * Math.sin(degree / 180 * Math.PI);
-                console.log(h,v,degree);
                 shape.shadow = {
                     color,
                     h,

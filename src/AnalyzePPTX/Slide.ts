@@ -55,7 +55,7 @@ export default class Slide {
         }
 
         // index 保留 看看后面需不需要排序
-        console.log(this._slide, this._index);
+        console.log(this._index);
         return {
             id: createRandomCode(),
             elements,
