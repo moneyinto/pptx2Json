@@ -1,3 +1,9 @@
+
+export interface IGradientColor {
+    offset: number;
+    value: string;
+}
+
 type IAlgn = "tl" | "t" | "tr" | "l" | "ctr" | "r" | "bl" | "b" | "br";
 
 export interface ISchemeClr {

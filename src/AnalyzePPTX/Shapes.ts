@@ -87,7 +87,7 @@ export default class Shapes {
                     const gradFill = new GradFill(sp.spPr.gradFill, this._theme);
                     shape.gradient = {
                         type: gradFill.type,
-                        color: gradFill.color.filter(c => c.pos === "0" || c.pos === "100000").map(c => c.value) || ["", ""],
+                        color: gradFill.color.map(c => { return { offset: +c.pos / 100000, value: c.value }; }),
                         rotate: gradFill.rotate
                     }
                 } else {

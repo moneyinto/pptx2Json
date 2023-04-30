@@ -43,7 +43,7 @@ export default class Background {
 
     get gradientColor() {
         // 渐变色暂时只取 pos 0 和 100000 的颜色值
-        return this._gradFill?.color.filter(c => c.pos === "0" || c.pos === "100000").map(c => c.value) || ["", ""];
+        return this._gradFill?.color.map(c => { return { offset: +c.pos / 100000, value: c.value }; });
     }
 
     get gradientType() {
