@@ -11,6 +11,9 @@ export interface ISchemeClr {
     lumOff?: {
         _val: string;
     };
+    tint?: {
+        _val: string;
+    }
 }
 
 type ISrgbClr = ISchemeClr;
