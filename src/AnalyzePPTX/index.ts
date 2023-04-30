@@ -19,7 +19,6 @@ export default class AnalyzePPTX {
             // 循环判定是否有层级
             if (!zip.files[key].dir) {
                 const path = zip.files[key].name;
-
                 if (/.xml$/.test(path) || /.rels$/.test(path)) {
                     const res = await zip.file(zip.files[key].name)!.async("string");
 
