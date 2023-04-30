@@ -10,34 +10,34 @@ export enum SHAPE_TYPE {
     rect = "rect",
     roundRect = "rectRadius",
     snip1Rect = "rectMinusSingleAngle",
-    RECT_MINUS_SAME_SIDE_ANGLE = "rectMinusSameSideAngle",
-    RECT_MINUS_OPPOSITE_ANGLE = "rectMinusOppositeAngle",
-    RECT_SINGLE_RADIUS_MINUS_SINGLE_ANGLE = "rectSingleRadiusMinusSingleAngle",
-    RECT_SINGLE_RADIUS = "rectSingleRadius",
-    RECT_SAME_SIDE_RADIUS = "rectSameSideRadius",
-    RECT_OPPOSITE_RADIUS = "rectOppositeRadius",
-    OVAL = "oval",
-    TRIANGLE = "triangle",
-    RIGHT_TRIANGLE = "rightTriangle",
-    PARALLELOGRAM = "parallelogram",
-    TRAPEZOIDAL = "trapezoidal",
-    DIAMOND = "diamond",
-    PENTAGON = "pentagon",
-    HEXAGON = "hexagon", // 六边形
-    HEPTAGON = "heptagon", // 七边形
-    OCTAGON = "octagon", // 八边形
-    DECAGON = "decagon", // 十边形
-    DODECAGON = "dodecagon", // 十二边形
-    PIE_SHAPE = "pieShape", // 饼形
-    CHORD_SHAPE = "chordShape", // 弦形
-    TEARDROP_SHAPE = "teardropShape", // 泪珠形
-    FRAME_SHAPE = "frameShape", // 框架
-    HALF_CLOSED_FRAME_SHAPE = "halfClosedFrameShape", // 半闭框
-    HORN = "horn", // 角
-    TWILL = "twill", // 斜纹
-    CROSS = "cross", // 十字形
-    CUTAWAY_RECTANGLE = "cutawayRectangle", // 缺角矩形
-    RING = "ring", // 环形
+    snip2SameRect = "rectMinusSameSideAngle",
+    snip2DiagRect = "rectMinusOppositeAngle",
+    snipRoundRect = "rectSingleRadiusMinusSingleAngle",
+    round1Rect = "rectSingleRadius",
+    round2SameRect = "rectSameSideRadius",
+    round2DiagRect = "rectOppositeRadius",
+    ellipse = "oval",
+    triangle = "triangle",
+    rtTriangle = "rightTriangle",
+    parallelogram = "parallelogram",
+    trapezoid = "trapezoidal",
+    diamond = "diamond",
+    pentagon = "pentagon",
+    hexagon = "hexagon", // 六边形
+    heptagon = "heptagon", // 七边形
+    octagon = "octagon", // 八边形
+    decagon = "decagon", // 十边形
+    dodecagon = "dodecagon", // 十二边形
+    pie = "pieShape", // 饼形
+    chord = "chordShape", // 弦形
+    teardrop = "teardropShape", // 泪珠形
+    frame = "frameShape", // 框架
+    halfFrame = "halfClosedFrameShape", // 半闭框
+    corner = "horn", // 角
+    diagStripe = "twill", // 斜纹
+    plus = "cross", // 十字形
+    plaque = "cutawayRectangle", // 缺角矩形
+    donut = "ring", // 环形
 }
 
 export default class Shapes {
@@ -56,7 +56,6 @@ export default class Shapes {
     get shapes() {
         const shapes: IPPTShapeElement[] = [];
         for (const sp of this._sps) {
-            console.log(sp);
             const shape: IPPTShapeElement = {
                 id: createRandomCode(),
                 fixedRatio: false,
