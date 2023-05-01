@@ -6,6 +6,7 @@ import { ISlideBackground } from "./types/slide";
 import Shapes from "./Shapes";
 import { IPPTElement } from "./types/element";
 import { createRandomCode } from "./util";
+import Lines from "./Lines";
 
 export default class Slide {
     private _slide: IXSlide;
@@ -48,14 +49,22 @@ export default class Slide {
         }
 
         let elements: IPPTElement[] = [];
+        // 形状
         if (this._slide.cSld.spTree.sp) {
             const sps = new Shapes(this._slide.cSld.spTree.sp, this._theme);
 
             elements = elements.concat(sps.shapes);
         }
 
+        // 线条
+        if (this._slide.cSld.spTree.cxnSp) {
+            const cxnSps = new Lines(this._slide.cSld.spTree.cxnSp, this._theme);
+
+            elements = elements.concat(cxnSps.lines);
+        }
+
         // index 保留 看看后面需不需要排序
-        console.log(this._index);
+        console.log(this._index, this._slide);
         return {
             id: createRandomCode(),
             elements,

@@ -178,6 +178,15 @@ interface ISpPr {
         noFill?: {};
         solidFill?: ISolidFill;
         _w?: string;
+        prstDash?: {
+            _val: "solid" | "dashed";
+        };
+        tailEnd?: {
+            _type: "arrow" | "dot";
+        };
+        headEnd?: {
+            _type: "arrow" | "dot";
+        };
     };
     noFill?: {};
     prstGeom: IPrstGeom;
@@ -225,11 +234,25 @@ interface ITxBody {
     };
 }
 
+interface ICNvCxnSpPr {}
+
+interface INvCxnSpPr {
+    cNvCxnSpPr: ICNvCxnSpPr;
+    cNvPr: ICNvPr;
+    nvPr: INvPr;
+}
+
 export interface ISp {
     nvSpPr: INvSpPr;
     spPr: ISpPr;
     style: IStyle;
     txBody: ITxBody;
+}
+
+export interface ICxnSp {
+    nvCxnSpPr: INvCxnSpPr;
+    spPr: ISpPr;
+    style: IStyle;
 }
 
 interface INvGrpSpPr {
@@ -246,6 +269,7 @@ interface ISpTree {
     grpSpPr: IGrpSpPr;
     nvGrpSpPr: INvGrpSpPr;
     sp?: ISp | ISp[];
+    cxnSp?: ICxnSp | ICxnSp[]
 }
 
 interface ICSld {
