@@ -7,6 +7,7 @@ import Shapes from "./Shapes";
 import { IPPTElement } from "./types/element";
 import { createRandomCode } from "./util";
 import Lines from "./Lines";
+import Pictures from "./Picture";
 
 export default class Slide {
     private _slide: IXSlide;
@@ -61,6 +62,21 @@ export default class Slide {
             const cxnSps = new Lines(this._slide.cSld.spTree.cxnSp, this._theme);
 
             elements = elements.concat(cxnSps.lines);
+        }
+
+        // 图片
+        if (this._slide.cSld.spTree.pic) {
+            const pic = new Pictures(this._slide.cSld.spTree.pic, this._theme, this._relationships);
+
+            const pictures = pic.pictures;
+
+            for (const picture of pictures) {
+                const fileExt = picture.src.replace(/.+\./, "");
+                const image = await this._zip.file(picture.src)!.async("base64");
+                picture.src = `data:image/${fileExt};base64,` + image;
+            }
+
+            elements = elements.concat(pictures);
         }
 
         // index 保留 看看后面需不需要排序

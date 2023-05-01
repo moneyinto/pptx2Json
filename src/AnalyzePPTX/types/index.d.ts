@@ -32,6 +32,9 @@ export interface ISolidFill {
 export interface IBlipFill {
     blip: {
         "_r:embed": string;
+        alphaModFix?: {
+            _amt: string;
+        }
     };
     stretch?: {
         fillRect: {
@@ -242,6 +245,16 @@ interface INvCxnSpPr {
     nvPr: INvPr;
 }
 
+interface ICNvPicPr {
+    picLocks: {};
+}
+
+interface INvPicPr {
+    cNvPicPr: ICNvPicPr;
+    cNvPr: ICNvPr;
+    nvPr: INvPr;
+}
+
 export interface ISp {
     nvSpPr: INvSpPr;
     spPr: ISpPr;
@@ -253,6 +266,12 @@ export interface ICxnSp {
     nvCxnSpPr: INvCxnSpPr;
     spPr: ISpPr;
     style: IStyle;
+}
+
+export interface IPic {
+    spPr: ISpPr;
+    blipFill: IBlipFill;
+    nvPicPr: INvPicPr;
 }
 
 interface INvGrpSpPr {
@@ -269,7 +288,8 @@ interface ISpTree {
     grpSpPr: IGrpSpPr;
     nvGrpSpPr: INvGrpSpPr;
     sp?: ISp | ISp[];
-    cxnSp?: ICxnSp | ICxnSp[]
+    cxnSp?: ICxnSp | ICxnSp[];
+    pic?: IPic | IPic[];
 }
 
 interface ICSld {

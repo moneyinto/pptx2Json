@@ -56,14 +56,15 @@ export default class Shapes {
     get shapes() {
         const shapes: IPPTShapeElement[] = [];
         for (const sp of this._sps) {
+            const xfrm = sp.spPr.xfrm;
             const shape: IPPTShapeElement = {
                 id: createRandomCode(),
                 fixedRatio: false,
-                left: EMU2PIX(sp.spPr.xfrm.off._x),
-                top: EMU2PIX(sp.spPr.xfrm.off._y),
-                width: EMU2PIX(sp.spPr.xfrm.ext._cx),
-                height: EMU2PIX(sp.spPr.xfrm.ext._cy),
-                rotate: Math.floor(+(sp.spPr.xfrm._rot || "0") / 60000),
+                left: EMU2PIX(xfrm.off._x),
+                top: EMU2PIX(xfrm.off._y),
+                width: EMU2PIX(xfrm.ext._cx),
+                height: EMU2PIX(xfrm.ext._cy),
+                rotate: Math.floor(+(xfrm._rot || "0") / 60000),
                 type: "shape",
                 name: sp.nvSpPr.cNvPr._name,
                 shape: SHAPE_TYPE[sp.spPr.prstGeom._prst] || "rect"
@@ -117,9 +118,9 @@ export default class Shapes {
             }
 
             // 水平翻转
-            if (sp.spPr.xfrm._flipH) shape.flipH = -1;
+            if (xfrm._flipH) shape.flipH = -1;
             // 垂直翻转
-            if (sp.spPr.xfrm._flipV) shape.flipV = -1;
+            if (xfrm._flipV) shape.flipV = -1;
 
             // 阴影
             if (sp.spPr.effectLst) {

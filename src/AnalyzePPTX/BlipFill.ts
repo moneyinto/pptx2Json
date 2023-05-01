@@ -14,6 +14,11 @@ export default class BlipFill {
         return relationship?._Target || "";
     }
 
+    // 透明度
+    get opacity() {
+        return +(this._blipFill.blip.alphaModFix?._amt || 0) / 1000;
+    }
+
     // 拉伸配置
     get stretch() {
         return this._blipFill.stretch;
