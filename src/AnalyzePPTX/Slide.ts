@@ -64,7 +64,7 @@ export default class Slide {
             elements = elements.concat(cxnSps.lines);
         }
 
-        // 图片
+        // 图片 视频 音频
         if (this._slide.cSld.spTree.pic) {
             const pic = new Pictures(this._slide.cSld.spTree.pic, this._theme, this._relationships);
 
@@ -72,8 +72,18 @@ export default class Slide {
 
             for (const picture of pictures) {
                 const fileExt = picture.src.replace(/.+\./, "");
-                const image = await this._zip.file(picture.src)!.async("base64");
-                picture.src = `data:image/${fileExt};base64,` + image;
+                if (picture.type === "image") {
+                    const image = await this._zip.file(picture.src)!.async("base64");
+                    picture.src = `data:image/${fileExt};base64,` + image;
+                } else {
+                    if (picture.cover) {
+                        const coverFileExt = picture.cover.replace(/.+\./, "");
+                        const image = await this._zip.file(picture.cover)!.async("base64");
+                        picture.cover = `data:image/${coverFileExt};base64,` + image;
+                    }
+                    const media = await this._zip.file(picture.src)!.async("base64");
+                    picture.src = `data:${picture.type}/${fileExt};base64,` + media;
+                }
             }
 
             elements = elements.concat(pictures);

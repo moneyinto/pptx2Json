@@ -2,7 +2,7 @@ import BlipFill from "./BlipFill";
 import Color from "./Color";
 import SolidFill from "./SolidFill";
 import { IPic, IRelationship, ITheme } from "./types";
-import { IPPTImageElement } from "./types/element";
+import { IPPTAudioElement, IPPTImageElement, IPPTVideoElement } from "./types/element";
 import { Angle2Degree, EMU2PIX, createRandomCode } from "./util";
 
 export default class Pictures {
@@ -21,17 +21,19 @@ export default class Pictures {
     }
 
     get pictures() {
-        const pictures: IPPTImageElement[] = [];
+        const pictures: (IPPTImageElement | IPPTVideoElement | IPPTAudioElement)[] = [];
         for (const pic of this._pics) {
             const xfrm = pic.spPr.xfrm;
-            const picture: IPPTImageElement = {
+            const { videoFile, audioFile } = pic.nvPicPr.nvPr;
+
+            const picture: IPPTImageElement | IPPTVideoElement | IPPTAudioElement = {
                 id: createRandomCode(),
                 fixedRatio: false,
                 left: EMU2PIX(xfrm.off._x),
                 top: EMU2PIX(xfrm.off._y),
                 width: EMU2PIX(xfrm.ext._cx),
                 height: EMU2PIX(xfrm.ext._cy),
-                type: "image",
+                type: videoFile ? "video" : audioFile ? "audio" : "image",
                 name: pic.nvPicPr.cNvPr._name,
                 rotate: Math.floor(+(xfrm._rot || "0") / 60000),
                 streach: 0,
@@ -49,7 +51,21 @@ export default class Pictures {
             if (pic.blipFill) {
                 const blipFill = new BlipFill(pic.blipFill, this._relationships);
                 picture.src = blipFill?.src.replace("..", "ppt") || "";
+                if (videoFile || audioFile) (picture as (IPPTVideoElement | IPPTAudioElement)).cover = picture.src;
                 picture.opacity = blipFill.opacity;
+            }
+
+            if (videoFile) {
+                const link = videoFile["_r:link"];
+                const relationship = this._relationships.find(r => r._Id === link);
+                picture.src = relationship?._Target.replace("..", "ppt") || "";
+
+            }
+
+            if (audioFile) {
+                const link = audioFile["_r:link"];
+                const relationship = this._relationships.find(r => r._Id === link);
+                picture.src = relationship?._Target.replace("..", "ppt") || ""
             }
 
             // 填充色

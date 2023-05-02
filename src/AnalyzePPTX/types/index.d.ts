@@ -154,7 +154,14 @@ interface ICNvSpPr {
     spLocks?: {};
 }
 
-interface INvPr {}
+interface INvPr {
+    videoFile?: {
+        "_r:link": string;
+    };
+    audioFile?: {
+        "_r:link": string;
+    };
+}
 
 interface INvSpPr {
     cNvPr: ICNvPr;

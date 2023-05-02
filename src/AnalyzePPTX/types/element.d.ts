@@ -316,12 +316,23 @@ export interface IPPTTextElement extends IPPTBaseElement {
  *
  * src: 视频地址
  *
+ * cover: 封面图
+ *
  * rotate: 旋转角度
  */
 export interface IPPTVideoElement extends IPPTBaseElement {
+    fixedRatio: boolean;
     type: "video";
     src: string;
+    cover?: string;
     rotate: number;
+    streach: 0 | 1;
+    flipH?: 1 | -1;
+    flipV?: 1 | -1;
+    opacity?: number;
+    outline?: IPPTElementOutline;
+    shadow?: IPPTElementShadow;
+    fill?: IPPTElementFill;
 }
 
 /**
@@ -331,12 +342,23 @@ export interface IPPTVideoElement extends IPPTBaseElement {
  *
  * src: 音频地址
  *
+ * cover: 封面图
+ *
  * rotate: 旋转角度
  */
 export interface IPPTAudioElement extends IPPTBaseElement {
+    fixedRatio: boolean;
     type: "audio";
     src: string;
+    cover?: string;
     rotate: number;
+    streach: 0 | 1;
+    flipH?: 1 | -1;
+    flipV?: 1 | -1;
+    opacity?: number;
+    outline?: IPPTElementOutline;
+    shadow?: IPPTElementShadow;
+    fill?: IPPTElementFill;
 }
 
 /**
