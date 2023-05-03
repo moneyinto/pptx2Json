@@ -3,7 +3,8 @@ import GradFill from "./GradFill";
 import SolidFill from "./SolidFill";
 import Style from "./Style";
 import { ISp, ITheme } from "./types";
-import { IPPTShapeElement } from "./types/element";
+import { IPPTShapeElement, IPPTTextElement } from "./types/element";
+import { IFontData } from "./types/font";
 import { Angle2Degree, EMU2PIX, createRandomCode } from "./util";
 
 export enum SHAPE_TYPE {
@@ -43,6 +44,7 @@ export enum SHAPE_TYPE {
 export default class Shapes {
     private _sps: ISp[] = [];
     private _theme: ITheme;
+    private _ctx: CanvasRenderingContext2D;
     constructor(sp: ISp | ISp[], theme: ITheme) {
         this._theme = theme;
         const isArray = sp instanceof Array;
@@ -51,27 +53,125 @@ export default class Shapes {
         } else {
             this._sps = sp;
         }
+
+        const canvas = document.createElement("canvas");
+        canvas.style.width = "100px";
+        canvas.style.height = "100px";
+
+        // 调整分辨率
+        const dpr = window.devicePixelRatio;
+        canvas.width = 100 * dpr;
+        canvas.height = 100 * dpr;
+        this._ctx = canvas.getContext("2d", { willReadFrequently: true })!;
+        this._ctx.scale(dpr, dpr);
+    }
+
+    getFontSize(text: IFontData) {
+        this._ctx.font = `${text.fontStyle} ${text.fontWeight} ${text.fontSize}px ${text.fontFamily}`;
+        const metrics = this._ctx.measureText(text.value);
+        const width = metrics.width;
+        const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+        return { width, height };
     }
 
     get shapes() {
-        const shapes: IPPTShapeElement[] = [];
+        // 文本框就是标准的形状加文本。
+        const shapes: (IPPTShapeElement | IPPTTextElement)[] = [];
         for (const sp of this._sps) {
             const xfrm = sp.spPr.xfrm;
-            const shape: IPPTShapeElement = {
-                id: createRandomCode(),
-                fixedRatio: false,
-                left: EMU2PIX(xfrm.off._x),
-                top: EMU2PIX(xfrm.off._y),
-                width: EMU2PIX(xfrm.ext._cx),
-                height: EMU2PIX(xfrm.ext._cy),
-                rotate: Math.floor(+(xfrm._rot || "0") / 60000),
-                type: "shape",
-                name: sp.nvSpPr.cNvPr._name,
-                shape: SHAPE_TYPE[sp.spPr.prstGeom._prst] || "rect"
-            };
+            let shape: IPPTShapeElement | IPPTTextElement | undefined;
 
-            // 锁定形状纵横比
-            if (sp.nvSpPr.cNvSpPr.spLocks) shape.fixedRatio = true;
+            if (sp.nvSpPr.cNvSpPr._txBox) {
+                // 文本框
+                shape = {
+                    id: createRandomCode(),
+                    type: "text",
+                    left: EMU2PIX(xfrm.off._x),
+                    top: EMU2PIX(xfrm.off._y),
+                    width: EMU2PIX(xfrm.ext._cx),
+                    height: EMU2PIX(xfrm.ext._cy),
+                    rotate: Math.floor(+(xfrm._rot || "0") / 60000),
+                    name: sp.nvSpPr.cNvPr._name,
+                    align: "left",
+                    wordSpace: 0,
+                    lineHeight: 1,
+                    content: []
+                };
+            } else {
+                // 形状
+                shape = {
+                    id: createRandomCode(),
+                    fixedRatio: false,
+                    left: EMU2PIX(xfrm.off._x),
+                    top: EMU2PIX(xfrm.off._y),
+                    width: EMU2PIX(xfrm.ext._cx),
+                    height: EMU2PIX(xfrm.ext._cy),
+                    rotate: Math.floor(+(xfrm._rot || "0") / 60000),
+                    type: "shape",
+                    name: sp.nvSpPr.cNvPr._name,
+                    shape: SHAPE_TYPE[sp.spPr.prstGeom._prst] || "rect",
+                    content: []
+                }
+
+                // 锁定形状纵横比
+                if (sp.nvSpPr.cNvSpPr.spLocks) shape.fixedRatio = true;
+            }
+
+            // 文本处理
+            if (sp.txBody.p.r) {
+                const texts: IFontData[] = [];
+                for (const r of sp.txBody.p.r) {
+                    let fontColor = "#000";
+                    if (r.rPr.solidFill) {
+                        const solidFill = new SolidFill(r.rPr.solidFill, this._theme);
+                        fontColor = solidFill.color;
+                        if (solidFill.alpha) {
+                            const alpha = +solidFill.alpha / 100000;
+                            fontColor = (fontColor + Math.floor(255 * alpha).toString(16)).toLocaleUpperCase();
+                        }
+                    }
+                    for (const t of r.t.__text) {
+                        const fontSize = (+(r.rPr._sz || "1350") / 100 / 3) * 4;
+                        const text: IFontData = {
+                            value: t,
+                            fontSize,
+                            width: 12,
+                            height: 12,
+                            fontStyle: r.rPr._i ? "italic" : "normal",
+                            fontWeight: r.rPr._b ? "bold" : "normal",
+                            fontFamily: r.rPr.latin?._typeface || this._theme.fontScheme._name,
+                            fontColor,
+                            underline: !!r.rPr._u,
+                            strikout: false
+                        };
+                        const { width, height } = this.getFontSize(text);
+                        text.width = width;
+                        text.height = height;
+
+                        texts.push(text);
+                    }
+                }
+
+                const lastIndex = texts.length - 1;
+                const lastText = lastIndex > -1 ? texts[lastIndex] : {};
+                const text: IFontData = {
+                    fontSize: 18,
+                    width: 18,
+                    height: 18,
+                    fontStyle: "normal",
+                    fontWeight: "normal",
+                    fontFamily: "楷体",
+                    fontColor: "#000",
+                    underline: false,
+                    strikout: false,
+                    ...lastText,
+                    value: "\n"
+                };
+
+                texts.push(text);
+
+                shape.content = texts;
+            }
 
             const style = new Style(sp.style, this._theme);
             // 填充色
@@ -91,8 +191,10 @@ export default class Shapes {
                         rotate: gradFill.rotate
                     }
                 } else {
-                    shape.fill = {
-                        color: style.fill
+                    if (style.fill) {
+                        shape.fill = {
+                            color: style.fill
+                        }
                     }
                 }
             }
@@ -111,9 +213,11 @@ export default class Shapes {
                     }
                 }
             } else {
-                shape.outline = {
-                    color: style.ln,
-                    width: EMU2PIX("12700")
+                if (style.ln) {
+                    shape.outline = {
+                        color: style.ln,
+                        width: EMU2PIX("12700")
+                    }
                 }
             }
 

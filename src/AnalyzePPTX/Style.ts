@@ -10,7 +10,7 @@ export default class Style {
     }
 
     get fill() {
-        if (this._style.fillRef) {
+        if (this._style && this._style.fillRef) {
             const solidFill = new SolidFill(this._style.fillRef as ISolidFill, this._theme);
             return solidFill.color;
         }
@@ -18,7 +18,7 @@ export default class Style {
     }
 
     get ln() {
-        if (this._style.lnRef) {
+        if (this._style && this._style.lnRef) {
             const solidFill = new SolidFill(this._style.lnRef as ISolidFill, this._theme);
             return solidFill.color;
         }

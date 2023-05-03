@@ -98,27 +98,6 @@ export interface IShapeGradient {
 }
 
 /**
- * 形状内文本
- *
- * content: 文本内容（HTML字符串）
- *
- * defaultFontName: 默认字体（会被文本内容中的HTML内联样式覆盖）
- *
- * defaultColor: 默认颜色（会被文本内容中的HTML内联样式覆盖）
- *
- * defaultFontSize: 默认字体大小（会被文本内容中的HTML内联样式覆盖）
- *
- * align: 文本对齐方向（垂直方向）
- */
-export interface IShapeText {
-    content: string;
-    defaultFontName: string;
-    defaultColor: string;
-    defaultFontSize: string;
-    align: "top" | "middle" | "bottom";
-}
-
-/**
  * 形状元素
  *
  * type: 元素类型（shape）
@@ -141,7 +120,7 @@ export interface IShapeText {
  *
  * shadow?: 阴影
  *
- * text?: 形状内文本
+ * content?: 形状内文本
  */
 export interface IPPTShapeElement extends IPPTBaseElement {
     type: "shape";
@@ -154,7 +133,8 @@ export interface IPPTShapeElement extends IPPTBaseElement {
     flipH?: 1 | -1;
     flipV?: 1 | -1;
     shadow?: IPPTElementShadow;
-    text?: IShapeText;
+    content?: IFontData[];
+    align?: "left" | "center" | "right";
 }
 
 /**
@@ -305,7 +285,10 @@ export interface IPPTTextElement extends IPPTBaseElement {
     rotate: number;
     align: "left" | "center" | "right";
     fill?: IPPTElementFill;
+    gradient?: IShapeGradient;
     outline?: IPPTElementOutline;
+    flipH?: 1 | -1;
+    flipV?: 1 | -1;
     shadow?: IPPTElementShadow;
 }
 

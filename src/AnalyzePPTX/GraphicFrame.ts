@@ -27,7 +27,6 @@ export default class GraphicFrame {
         const series: number[][] = [];
         for (const ser of sers) {
             labels = (ser.cat.strRef.strCache.pt as IPT[]).map(p => p.v.__text);
-            console.log(ser.tx.strRef.strCache.pt);
             legends.push((ser.tx.strRef.strCache.pt as IPT).v.__text);
             series.push(ser.val.numRef.numCache.pt.map(p => +p.v.__text));
         }
@@ -45,7 +44,6 @@ export default class GraphicFrame {
                 const xmlSrc = relationship?._Target.replace("..", "ppt") || "";
                 const res = await this._zip.file(xmlSrc)!.async("string");
                 const json: IChart = this._x2js.xml2js(res);
-                console.log(json);
                 const xfrm = graphicFrame.xfrm;
 
                 const chartElement: IPPTChartElement = {

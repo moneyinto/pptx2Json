@@ -153,6 +153,7 @@ interface ICNvPr {
 
 interface ICNvSpPr {
     spLocks?: {};
+    _txBox?: string;
 }
 
 interface INvPr {
@@ -234,6 +235,26 @@ interface IPPr {
     _algn: IAlgn;
 }
 
+interface IEA {
+    _charset: string;
+    _typeface: string;
+}
+
+interface IR {
+    rPr: {
+        ea?: IEA;
+        latin?: IEA;
+        _b?: {};
+        _i?: {};
+        _u?: {};
+        solidFill?: ISolidFill;
+        _sz?: string;
+    };
+    t: {
+        __text: string;
+    }
+}
+
 interface ITxBody {
     bodyPr: IBodyPr;
     p: {
@@ -241,7 +262,8 @@ interface ITxBody {
             _altLang: "en-US";
             _lang: "zh-CN";
         };
-        pPr: IPPr;
+        r?: IR[];
+        pPr?: IPPr;
     };
 }
 
