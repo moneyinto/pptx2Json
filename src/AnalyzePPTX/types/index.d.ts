@@ -95,6 +95,7 @@ interface IPrstDash {
 }
 
 interface ILn {
+    noFill?: {};
     miter: {
         _lim: string;
     };
@@ -291,12 +292,167 @@ interface IGrpSpPr {
     xfrm?: IXfrm;
 }
 
+interface IGraphicFrame {
+    graphic: {
+        graphicData: {
+            chart?: {
+                "_r:id": string;
+            };
+            tbl?: {
+
+            };
+        };
+    };
+    nvGraphicFramePr: {
+        cNvGraphicFramePr: {};
+        cNvPr: ICNvPr;
+        nvPr: INvPr;
+    };
+    xfrm: IXfrm;
+}
+
 interface ISpTree {
     grpSpPr: IGrpSpPr;
     nvGrpSpPr: INvGrpSpPr;
     sp?: ISp | ISp[];
     cxnSp?: ICxnSp | ICxnSp[];
     pic?: IPic | IPic[];
+    graphicFrame?: IGraphicFrame | IGraphicFrame[];
+}
+
+export interface IPT {
+    _idx: string;
+    v: {
+        __text: string;
+    }
+}
+
+interface IStrRef {
+    strCache: {
+        pt: IPT | IPT[];
+        ptCount: {
+            _val: string;
+        };
+    };
+}
+
+interface INumRef {
+    numCache: {
+        formatCode: {
+            __text: string;
+        };
+        pt: {
+            _idx: string;
+            v: {
+                __text: string;
+            }
+        }[];
+        ptCount: {
+            _val: string;
+        };
+    }
+}
+
+export interface ISer {
+    cat: {
+        strRef: IStrRef;
+    };
+    dLbls: {
+        delete: {
+            _val: string;
+        };
+    };
+    idx: {
+        _val: string;
+    };
+    invertIfNegative: {
+        _val: string;
+    };
+    order: {
+        _val: string;
+    };
+    spPr: ISpPr;
+    tx: {
+        strRef: IStrRef;
+    };
+    val: {
+        numRef: INumRef;
+    };
+}
+
+interface ITypeChart {
+    axId?: { _val: string; }[];
+    dLbls: {
+        showLegendKey: {};
+        showVal: {};
+        showCatName: {};
+        showSerName: {};
+        showPercent: {};
+    };
+    grouping?: { _val: string };
+    ser: ISer | ISer[];
+    varyColors: {};
+}
+
+interface IBarChart extends ITypeChart {
+    barDir: { _val: string; };
+    gapWidth: { _val: string; };
+    overlap: { _val: string; };
+}
+
+interface ILineChart extends ITypeChart {
+    smooth: {};
+    marker: {};
+}
+
+interface IPieChart extends ITypeChart {
+    firstSliceAng: {};
+}
+
+export interface IChart {
+    chartSpace: {
+        chart: {
+            autoTitleDeleted: {
+                _val: string;
+            };
+            dispBlanksAs: {
+                _val: string;
+            };
+            legend: {
+                layout: {};
+                legendPos: {
+                    _val: string;
+                };
+                overlay: {
+                    _val: string;
+                };
+                spPr: {
+                    effectLst: {};
+                    ln: ILn;
+                    noFill?: {};
+                };
+                txPr: {
+                    bodyPr: {
+                        _anchor: string;
+                        _anchorCtr: string;
+                        _rot: string;
+                        _spcFirstLastPara: string;
+                        _vert: string;
+                        _vertOverflow: string;
+                        _wrap: string;
+                    };
+                    lstStyle: {};
+                }
+            };
+            plotArea: {
+                catAx: {};
+                layout: {};
+                barChart?: IBarChart;
+                lineChart?: ILineChart;
+                pieChart?: IPieChart;
+            }
+        }
+    }
 }
 
 interface ICSld {

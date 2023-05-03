@@ -36,7 +36,7 @@ export default class AnalyzePPTX {
             if (/ppt\/slides\/slide[\d]+.xml$/.test(key)) {
                 const n = /\d+/.exec(key)![0];
                 const relKey = `ppt/slides/_rels/slide${n}.xml.rels`;
-                const slide = new Slide(xml[key].sld, xml[relKey], theme, n, zip);
+                const slide = new Slide(xml[key].sld, xml[relKey], theme, n, zip, x2js);
                 const result: ISlide = await slide.getSlide();
                 slides.push(result);
             }

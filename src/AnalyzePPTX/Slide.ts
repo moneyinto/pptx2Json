@@ -8,6 +8,8 @@ import { IPPTElement } from "./types/element";
 import { createRandomCode } from "./util";
 import Lines from "./Lines";
 import Pictures from "./Picture";
+import GraphicFrame from "./GraphicFrame";
+import X2JS from "x2js";
 
 export default class Slide {
     private _slide: IXSlide;
@@ -15,12 +17,14 @@ export default class Slide {
     private _theme: ITheme;
     private _index: string = "";
     private _zip: JSZip;
-    constructor(slide: IXSlide, slideRel: { Relationships: { Relationship: IRelationship[] } }, theme: ITheme, index: string, zip: JSZip) {
+    private _x2js: X2JS;
+    constructor(slide: IXSlide, slideRel: { Relationships: { Relationship: IRelationship[] } }, theme: ITheme, index: string, zip: JSZip, x2js: X2JS) {
         this._slide = slide;
         this._relationships = slideRel.Relationships.Relationship;
         this._theme = theme;
         this._index = index;
         this._zip = zip;
+        this._x2js = x2js;
     }
 
     async getSlide() {
@@ -88,6 +92,16 @@ export default class Slide {
 
             elements = elements.concat(pictures);
         }
+
+        // 图表
+        if (this._slide.cSld.spTree.graphicFrame) {
+            const graphicFrame = new GraphicFrame(this._slide.cSld.spTree.graphicFrame, this._relationships, this._zip, this._x2js);
+
+            const frames = await graphicFrame.getGraphicFrames();
+            elements = elements.concat(frames);
+        }
+
+        // 考虑元素层级关系。
 
         // index 保留 看看后面需不需要排序
         console.log(this._index, this._slide);

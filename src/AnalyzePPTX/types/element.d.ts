@@ -440,6 +440,7 @@ export interface ChartData {
  * fill?: 填充色
  */
 export interface IPPTChartElement extends IPPTBaseElement {
+    fixedRatio: boolean;
     type: "chart";
     chartType: ChartType;
     data: ChartData;
