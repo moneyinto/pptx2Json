@@ -92,7 +92,7 @@ export default class Shapes {
                     rotate: Math.floor(+(xfrm._rot || "0") / 60000),
                     name: sp.nvSpPr.cNvPr._name,
                     align: "left",
-                    wordSpace: 0,
+                    wordSpace: 1,
                     lineHeight: 1,
                     content: []
                 };
@@ -109,12 +109,19 @@ export default class Shapes {
                     type: "shape",
                     name: sp.nvSpPr.cNvPr._name,
                     shape: SHAPE_TYPE[sp.spPr.prstGeom?._prst] || "rect",
+                    align: "left",
                     content: []
                 }
 
                 // 锁定形状纵横比
                 if (sp.nvSpPr.cNvSpPr.spLocks) shape.fixedRatio = true;
             }
+
+            if (sp.nvSpPr.nvPr.ph?._type) {
+                //
+            }
+
+            if (sp.txBody.p.pPr?._algn) shape.align = { ctr: "center", l: "left", r: "right" }[sp.txBody.p.pPr._algn];
 
             // 文本处理
             if (sp.txBody.p.r) {

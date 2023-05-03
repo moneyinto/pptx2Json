@@ -165,6 +165,9 @@ interface INvPr {
     audioFile?: {
         "_r:link": string;
     };
+    ph?: {
+        _type: "body" | "ctrTitle" | "title" | "pic" | "subTitle" | "tbl" | "dt" | "chart"
+    }
 }
 
 interface INvSpPr {

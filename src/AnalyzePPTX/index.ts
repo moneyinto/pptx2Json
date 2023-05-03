@@ -30,6 +30,8 @@ export default class AnalyzePPTX {
         const themeXML= xml["ppt/theme/theme1.xml"];
         const theme = new Theme(themeXML).theme;
 
+        const slideMasterXML = xml["ppt/slideMasters/slideMaster1.xml"];
+        console.log(theme, slideMasterXML);
         const slides: ISlide[] = [];
         try {
             for (const key in xml) {
