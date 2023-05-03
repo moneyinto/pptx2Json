@@ -2,7 +2,7 @@ import Color from "./Color";
 import GradFill from "./GradFill";
 import SolidFill from "./SolidFill";
 import Style from "./Style";
-import { ISp, ITheme } from "./types";
+import { IR, ISp, ITheme } from "./types";
 import { IPPTShapeElement, IPPTTextElement } from "./types/element";
 import { IFontData } from "./types/font";
 import { Angle2Degree, EMU2PIX, createRandomCode } from "./util";
@@ -80,7 +80,6 @@ export default class Shapes {
         for (const sp of this._sps) {
             const xfrm = sp.spPr.xfrm;
             let shape: IPPTShapeElement | IPPTTextElement | undefined;
-
             if (sp.nvSpPr.cNvSpPr._txBox) {
                 // 文本框
                 shape = {
@@ -109,7 +108,7 @@ export default class Shapes {
                     rotate: Math.floor(+(xfrm._rot || "0") / 60000),
                     type: "shape",
                     name: sp.nvSpPr.cNvPr._name,
-                    shape: SHAPE_TYPE[sp.spPr.prstGeom._prst] || "rect",
+                    shape: SHAPE_TYPE[sp.spPr.prstGeom?._prst] || "rect",
                     content: []
                 }
 
@@ -120,7 +119,14 @@ export default class Shapes {
             // 文本处理
             if (sp.txBody.p.r) {
                 const texts: IFontData[] = [];
-                for (const r of sp.txBody.p.r) {
+                const isArray = sp.txBody.p.r instanceof Array;
+                let rs: IR[] = [];
+                if (!isArray) {
+                    rs = [sp.txBody.p.r as IR];
+                } else {
+                    rs = sp.txBody.p.r as IR[];
+                }
+                for (const r of rs) {
                     let fontColor = "#000";
                     if (r.rPr.solidFill) {
                         const solidFill = new SolidFill(r.rPr.solidFill, this._theme);
@@ -130,25 +136,28 @@ export default class Shapes {
                             fontColor = (fontColor + Math.floor(255 * alpha).toString(16)).toLocaleUpperCase();
                         }
                     }
-                    for (const t of r.t.__text) {
-                        const fontSize = (+(r.rPr._sz || "1350") / 100 / 3) * 4;
-                        const text: IFontData = {
-                            value: t,
-                            fontSize,
-                            width: 12,
-                            height: 12,
-                            fontStyle: r.rPr._i ? "italic" : "normal",
-                            fontWeight: r.rPr._b ? "bold" : "normal",
-                            fontFamily: r.rPr.latin?._typeface || this._theme.fontScheme._name,
-                            fontColor,
-                            underline: !!r.rPr._u,
-                            strikout: false
-                        };
-                        const { width, height } = this.getFontSize(text);
-                        text.width = width;
-                        text.height = height;
 
-                        texts.push(text);
+                    if (r.t.__text) {
+                        for (const t of r.t.__text) {
+                            const fontSize = (+(r.rPr._sz || "1350") / 100 / 3) * 4;
+                            const text: IFontData = {
+                                value: t,
+                                fontSize,
+                                width: 12,
+                                height: 12,
+                                fontStyle: r.rPr._i ? "italic" : "normal",
+                                fontWeight: r.rPr._b ? "bold" : "normal",
+                                fontFamily: r.rPr.latin?._typeface || this._theme.fontScheme._name,
+                                fontColor,
+                                underline: !!r.rPr._u,
+                                strikout: false
+                            };
+                            const { width, height } = this.getFontSize(text);
+                            text.width = width;
+                            text.height = height;
+    
+                            texts.push(text);
+                        }
                     }
                 }
 
@@ -227,7 +236,7 @@ export default class Shapes {
             if (xfrm._flipV) shape.flipV = -1;
 
             // 阴影
-            if (sp.spPr.effectLst) {
+            if (sp.spPr.effectLst?.outerShdw) {
                 const outerShdw = sp.spPr.effectLst.outerShdw;
                 const shapeColor = new Color(outerShdw, this._theme)
                 const color = (shapeColor.color + Math.floor(255 * +shapeColor.alpha / 100000).toString(16)).toLocaleUpperCase();

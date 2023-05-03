@@ -16,8 +16,8 @@ export default class Color {
 
                 let _hsl = hsl(this.color);
                 if (solidFill.schemeClr.lumMod || solidFill.schemeClr.lumOff) {
-                    const lumMod = (+solidFill.schemeClr.lumMod._val || 0) / 100000;
-                    const lumOff = (+solidFill.schemeClr.lumOff._val || 0) / 100000;
+                    const lumMod = (+solidFill.schemeClr.lumMod?._val || 0) / 100000;
+                    const lumOff = (+solidFill.schemeClr.lumOff?._val || 0) / 100000;
                     if (lumOff != 0) {
                         _hsl.l = (_hsl.l * (lumMod / 100) + (lumOff / 100)) * 100
                     }
@@ -37,6 +37,8 @@ export default class Color {
         } else if (solidFill.srgbClr) {
             this.alpha = solidFill.srgbClr.alpha?._val;
             this.color = ("#" + solidFill.srgbClr._val).toLocaleUpperCase();
+        } else if (solidFill.prstClr) {
+            this.color = solidFill.prstClr._val;
         }
     }
 }

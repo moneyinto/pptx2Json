@@ -31,17 +31,21 @@ export default class AnalyzePPTX {
         const theme = new Theme(themeXML).theme;
 
         const slides: ISlide[] = [];
-
-        for (const key in xml) {
-            if (/ppt\/slides\/slide[\d]+.xml$/.test(key)) {
-                const n = /\d+/.exec(key)![0];
-                const relKey = `ppt/slides/_rels/slide${n}.xml.rels`;
-                const slide = new Slide(xml[key].sld, xml[relKey], theme, n, zip, x2js);
-                const result: ISlide = await slide.getSlide();
-                slides.push(result);
+        try {
+            for (const key in xml) {
+                if (/ppt\/slides\/slide[\d]+.xml$/.test(key)) {
+                    const n = /\d+/.exec(key)![0];
+                    const relKey = `ppt/slides/_rels/slide${n}.xml.rels`;
+                    const slide = new Slide(xml[key].sld, xml[relKey], theme, n, zip, x2js);
+                    const result: ISlide = await slide.getSlide();
+                    slides.push(result);
+                }
             }
-        }
 
-        return slides;
+            return slides;
+        } catch(err) {
+            console.error(err);
+            return slides;
+        }
     }
 }

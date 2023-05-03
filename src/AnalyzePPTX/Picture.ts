@@ -95,7 +95,7 @@ export default class Pictures {
             }
 
             // 阴影
-            if (pic.spPr.effectLst) {
+            if (pic.spPr.effectLst?.outerShdw) {
                 const outerShdw = pic.spPr.effectLst.outerShdw;
                 const shapeColor = new Color(outerShdw, this._theme)
                 const color = (shapeColor.color + Math.floor(255 * +shapeColor.alpha / 100000).toString(16)).toLocaleUpperCase();

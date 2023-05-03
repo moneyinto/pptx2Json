@@ -23,10 +23,12 @@ export interface ISchemeClr {
 }
 
 type ISrgbClr = ISchemeClr;
+type IPrstClr = ISchemeClr;
 
 export interface ISolidFill {
     schemeClr?: ISchemeClr;
     srgbClr?: ISrgbClr;
+    prstClr?: IPrstClr;
 }
 
 export interface IBlipFill {
@@ -201,7 +203,7 @@ interface ISpPr {
         };
     };
     noFill?: {};
-    prstGeom: IPrstGeom;
+    prstGeom?: IPrstGeom;
     xfrm: IXfrm;
     solidFill?: ISolidFill;
     gradFill?: IGradFill;
@@ -262,7 +264,7 @@ interface ITxBody {
             _altLang: "en-US";
             _lang: "zh-CN";
         };
-        r?: IR[];
+        r?: IR | IR[];
         pPr?: IPPr;
     };
 }
