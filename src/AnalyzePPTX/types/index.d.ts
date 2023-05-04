@@ -487,6 +487,42 @@ interface ICSld {
     spTree: ISpTree;
 }
 
+interface ILvlPPR {
+    defRPr: {
+        solidFill: ISolidFill;
+        _b?: string;
+        _i?: string;
+        _sz?: string;
+        _u?: string;
+        _strike?: string;
+    };
+}
+
+interface ITexStyle {
+    lvl1pPr: ILvlPPR;
+    lvl2pPr?: ILvlPPR;
+    lvl3pPr?: ILvlPPR;
+    lvl4pPr?: ILvlPPR;
+    lvl5pPr?: ILvlPPR;
+    lvl6pPr?: ILvlPPR;
+    lvl7pPr?: ILvlPPR;
+    lvl8pPr?: ILvlPPR;
+    lvl9pPr?: ILvlPPR;
+}
+
+export interface ISldMaster {
+    cSld: ICSld;
+    txStyles: {
+        bodyStyle: ITexStyle;
+        otherStyle: ITexStyle;
+        titleStyle: ITexStyle;
+    };
+}
+
+export interface ISlideMaster {
+    sldMaster: ISldMaster;
+}
+
 export interface IXSlide {
     cSld: ICSld;
     clrMapOvr: {};

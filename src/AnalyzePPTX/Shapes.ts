@@ -2,7 +2,7 @@ import Color from "./Color";
 import GradFill from "./GradFill";
 import SolidFill from "./SolidFill";
 import Style from "./Style";
-import { IR, ISp, ITheme } from "./types";
+import { IR, ISldMaster, ISp, ITheme } from "./types";
 import { IPPTShapeElement, IPPTTextElement } from "./types/element";
 import { IFontData } from "./types/font";
 import { Angle2Degree, EMU2PIX, createRandomCode } from "./util";
@@ -39,14 +39,22 @@ export enum SHAPE_TYPE {
     plus = "cross", // 十字形
     plaque = "cutawayRectangle", // 缺角矩形
     donut = "ring", // 环形
-}
+};
+
+const typeMap = {
+    title: "title",
+    subTitle: "body",
+    ctrTitle: "title"
+};
 
 export default class Shapes {
     private _sps: ISp[] = [];
     private _theme: ITheme;
+    private _sldMaster: ISldMaster;
     private _ctx: CanvasRenderingContext2D;
-    constructor(sp: ISp | ISp[], theme: ITheme) {
+    constructor(sp: ISp | ISp[], theme: ITheme, sldMaster: ISldMaster) {
         this._theme = theme;
+        this._sldMaster = sldMaster;
         const isArray = sp instanceof Array;
         if (!isArray) {
             this._sps = [sp];
@@ -70,14 +78,44 @@ export default class Shapes {
         this._ctx.font = `${text.fontStyle} ${text.fontWeight} ${text.fontSize}px ${text.fontFamily}`;
         const metrics = this._ctx.measureText(text.value);
         const width = metrics.width;
-        const height = metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
+        const height =
+            metrics.actualBoundingBoxAscent + metrics.actualBoundingBoxDescent;
         return { width, height };
+    }
+
+    getTextStyle(
+        type:
+            | "body"
+            | "title"
+            | "pic"
+            | "tbl"
+            | "dt"
+            | "chart"
+            | "other"
+    ) {
+        switch (type) {
+            case "title": {
+                return this._sldMaster.txStyles.titleStyle;
+            }
+            case "body": {
+                return this._sldMaster.txStyles.bodyStyle;
+            }
+            case "other": {
+                return this._sldMaster.txStyles.otherStyle;
+            }
+        }
+        return null;
     }
 
     get shapes() {
         // 文本框就是标准的形状加文本。
         const shapes: (IPPTShapeElement | IPPTTextElement)[] = [];
         for (const sp of this._sps) {
+            let type = "";
+            if (sp.nvSpPr.nvPr.ph?._type) {
+                type = sp.nvSpPr.nvPr.ph._type;
+            }
+            const textType = typeMap[type] || type || "other";
             const xfrm = sp.spPr.xfrm;
             let shape: IPPTShapeElement | IPPTTextElement | undefined;
             if (sp.nvSpPr.cNvSpPr._txBox) {
@@ -111,17 +149,16 @@ export default class Shapes {
                     shape: SHAPE_TYPE[sp.spPr.prstGeom?._prst] || "rect",
                     align: "left",
                     content: []
-                }
+                };
 
                 // 锁定形状纵横比
                 if (sp.nvSpPr.cNvSpPr.spLocks) shape.fixedRatio = true;
             }
 
-            if (sp.nvSpPr.nvPr.ph?._type) {
-                //
-            }
-
-            if (sp.txBody.p.pPr?._algn) shape.align = { ctr: "center", l: "left", r: "right" }[sp.txBody.p.pPr._algn];
+            if (sp.txBody.p.pPr?._algn)
+                shape.align = { ctr: "center", l: "left", r: "right" }[
+                    sp.txBody.p.pPr._algn
+                ];
 
             // 文本处理
             if (sp.txBody.p.r) {
@@ -136,17 +173,23 @@ export default class Shapes {
                 for (const r of rs) {
                     let fontColor = "#000";
                     if (r.rPr.solidFill) {
-                        const solidFill = new SolidFill(r.rPr.solidFill, this._theme);
+                        const solidFill = new SolidFill(
+                            r.rPr.solidFill,
+                            this._theme
+                        );
                         fontColor = solidFill.color;
                         if (solidFill.alpha) {
                             const alpha = +solidFill.alpha / 100000;
-                            fontColor = (fontColor + Math.floor(255 * alpha).toString(16)).toLocaleUpperCase();
+                            fontColor = (
+                                fontColor + Math.floor(255 * alpha).toString(16)
+                            ).toLocaleUpperCase();
                         }
                     }
 
                     if (r.t.__text) {
                         for (const t of r.t.__text) {
-                            const fontSize = (+(r.rPr._sz || "1350") / 100 / 3) * 4;
+                            const fontSize =
+                                (+(r.rPr._sz || "1350") / 100 / 3) * 4;
                             const text: IFontData = {
                                 value: t,
                                 fontSize,
@@ -154,7 +197,9 @@ export default class Shapes {
                                 height: 12,
                                 fontStyle: r.rPr._i ? "italic" : "normal",
                                 fontWeight: r.rPr._b ? "bold" : "normal",
-                                fontFamily: r.rPr.latin?._typeface || this._theme.fontScheme._name,
+                                fontFamily:
+                                    r.rPr.latin?._typeface ||
+                                    this._theme.fontScheme._name,
                                 fontColor,
                                 underline: !!r.rPr._u,
                                 strikout: false
@@ -162,7 +207,7 @@ export default class Shapes {
                             const { width, height } = this.getFontSize(text);
                             text.width = width;
                             text.height = height;
-    
+
                             texts.push(text);
                         }
                     }
@@ -193,24 +238,32 @@ export default class Shapes {
             // 填充色
             if (!sp.spPr.noFill) {
                 if (sp.spPr.solidFill) {
-                    const solidFill = new SolidFill(sp.spPr.solidFill, this._theme);
+                    const solidFill = new SolidFill(
+                        sp.spPr.solidFill,
+                        this._theme
+                    );
                     const opacity = +solidFill.alpha / 1000;
                     shape.fill = {
                         color: solidFill.color,
                         opacity
-                    }
+                    };
                 } else if (sp.spPr.gradFill) {
-                    const gradFill = new GradFill(sp.spPr.gradFill, this._theme);
+                    const gradFill = new GradFill(
+                        sp.spPr.gradFill,
+                        this._theme
+                    );
                     shape.gradient = {
                         type: gradFill.type,
-                        color: gradFill.color.map(c => { return { offset: +c.pos / 100000, value: c.value }; }),
+                        color: gradFill.color.map((c) => {
+                            return { offset: +c.pos / 100000, value: c.value };
+                        }),
                         rotate: gradFill.rotate
-                    }
+                    };
                 } else {
                     if (style.fill) {
                         shape.fill = {
                             color: style.fill
-                        }
+                        };
                     }
                 }
             }
@@ -226,14 +279,14 @@ export default class Shapes {
                         color: solidFill.color,
                         opacity,
                         width
-                    }
+                    };
                 }
             } else {
                 if (style.ln) {
                     shape.outline = {
                         color: style.ln,
                         width: EMU2PIX("12700")
-                    }
+                    };
                 }
             }
 
@@ -245,18 +298,21 @@ export default class Shapes {
             // 阴影
             if (sp.spPr.effectLst?.outerShdw) {
                 const outerShdw = sp.spPr.effectLst.outerShdw;
-                const shapeColor = new Color(outerShdw, this._theme)
-                const color = (shapeColor.color + Math.floor(255 * +shapeColor.alpha / 100000).toString(16)).toLocaleUpperCase();
+                const shapeColor = new Color(outerShdw, this._theme);
+                const color = (
+                    shapeColor.color +
+                    Math.floor((255 * +shapeColor.alpha) / 100000).toString(16)
+                ).toLocaleUpperCase();
                 const degree = Angle2Degree(+outerShdw._dir || 0);
                 const distance = EMU2PIX(outerShdw._dist || 0);
-                const h = distance * Math.sin((90 - degree) / 180 * Math.PI);
-                const v = distance * Math.sin(degree / 180 * Math.PI);
+                const h = distance * Math.sin(((90 - degree) / 180) * Math.PI);
+                const v = distance * Math.sin((degree / 180) * Math.PI);
                 shape.shadow = {
                     color,
                     h,
                     v,
                     blur: EMU2PIX(outerShdw._blurRad || 0)
-                }
+                };
             }
 
             shapes.push(shape);

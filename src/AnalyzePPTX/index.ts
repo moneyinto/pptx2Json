@@ -3,6 +3,7 @@ import X2JS from "x2js";
 import Theme from "./Theme";
 import Slide from "./Slide";
 import { ISlide } from "./types/slide";
+import { ISlideMaster } from "./types";
 
 export default class AnalyzePPTX {
     public slides: ISlide[] = [];
@@ -30,15 +31,14 @@ export default class AnalyzePPTX {
         const themeXML= xml["ppt/theme/theme1.xml"];
         const theme = new Theme(themeXML).theme;
 
-        const slideMasterXML = xml["ppt/slideMasters/slideMaster1.xml"];
-        console.log(theme, slideMasterXML);
+        const slideMasterXML: ISlideMaster = xml["ppt/slideMasters/slideMaster1.xml"];
         const slides: ISlide[] = [];
         try {
             for (const key in xml) {
                 if (/ppt\/slides\/slide[\d]+.xml$/.test(key)) {
                     const n = /\d+/.exec(key)![0];
                     const relKey = `ppt/slides/_rels/slide${n}.xml.rels`;
-                    const slide = new Slide(xml[key].sld, xml[relKey], theme, n, zip, x2js);
+                    const slide = new Slide(xml[key].sld, xml[relKey], theme, n, zip, x2js, slideMasterXML.sldMaster);
                     const result: ISlide = await slide.getSlide();
                     slides.push(result);
                 }
