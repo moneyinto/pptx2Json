@@ -1,7 +1,7 @@
 
 import JSZip from "jszip";
 import Background from "./Background";
-import { IRelationship, ITheme, IXSlide } from "./types";
+import { IRelationship, ISldMaster, ITheme, IXSlide } from "./types";
 import { ISlideBackground } from "./types/slide";
 import Shapes from "./Shapes";
 import { IPPTElement } from "./types/element";
@@ -18,13 +18,15 @@ export default class Slide {
     private _index: string = "";
     private _zip: JSZip;
     private _x2js: X2JS;
-    constructor(slide: IXSlide, slideRel: { Relationships: { Relationship: IRelationship[] } }, theme: ITheme, index: string, zip: JSZip, x2js: X2JS) {
+    private _sldMaster: ISldMaster;
+    constructor(slide: IXSlide, slideRel: { Relationships: { Relationship: IRelationship[] } }, theme: ITheme, index: string, zip: JSZip, x2js: X2JS, sldMaster: ISldMaster) {
         this._slide = slide;
         this._relationships = slideRel.Relationships.Relationship;
         this._theme = theme;
         this._index = index;
         this._zip = zip;
         this._x2js = x2js;
+        this._sldMaster = sldMaster;
     }
 
     async getSlide() {
@@ -56,7 +58,7 @@ export default class Slide {
         let elements: IPPTElement[] = [];
         // 形状
         if (this._slide.cSld.spTree.sp) {
-            const sps = new Shapes(this._slide.cSld.spTree.sp, this._theme);
+            const sps = new Shapes(this._slide.cSld.spTree.sp, this._theme, this._sldMaster);
 
             elements = elements.concat(sps.shapes);
         }
