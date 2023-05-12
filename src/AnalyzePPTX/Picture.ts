@@ -28,6 +28,7 @@ export default class Pictures {
 
             const picture: IPPTImageElement | IPPTVideoElement | IPPTAudioElement = {
                 id: createRandomCode(),
+                originId: pic.nvPicPr.cNvPr._id,
                 fixedRatio: false,
                 left: EMU2PIX(xfrm.off._x),
                 top: EMU2PIX(xfrm.off._y),

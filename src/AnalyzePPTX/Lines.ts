@@ -25,6 +25,7 @@ export default class Lines {
 
             const line: IPPTLineElement = {
                 id: createRandomCode(),
+                originId: cxnSp.nvCxnSpPr.cNvPr._id,
                 left: EMU2PIX(cxnSp.spPr.xfrm.off._x),
                 top: EMU2PIX(cxnSp.spPr.xfrm.off._y),
                 start: [0, 0],

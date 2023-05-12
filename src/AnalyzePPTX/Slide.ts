@@ -2,7 +2,7 @@
 import JSZip from "jszip";
 import Background from "./Background";
 import { IRelationship, ISldLayout, ISldMaster, ITheme, IXSlide } from "./types";
-import { ISlideBackground } from "./types/slide";
+import { IPPTAnimation, ISlideBackground } from "./types/slide";
 import Shapes from "./Shapes";
 import { IPPTElement } from "./types/element";
 import { createRandomCode } from "./util";
@@ -10,6 +10,7 @@ import Lines from "./Lines";
 import Pictures from "./Picture";
 import GraphicFrame from "./GraphicFrame";
 import X2JS from "x2js";
+import Animations from "./Animations";
 
 export default class Slide {
     private _slide: IXSlide;
@@ -105,6 +106,21 @@ export default class Slide {
             elements = elements.concat(frames);
         }
 
+        // 动画
+        let animations: IPPTAnimation[] = [];
+        if (this._slide.timing) {
+            const timing = this._slide.timing;
+            animations = new Animations(timing).animations;
+        }
+
+        for (const animation of animations) {
+            animation.elId = elements.find(e => e.originId === animation.elId)?.id;
+        }
+
+        for (const element of elements) {
+            delete element.originId;
+        }
+
         // 考虑元素层级关系。
 
         // index 保留 看看后面需不需要排序
@@ -113,7 +129,8 @@ export default class Slide {
             index: +this._index,
             id: createRandomCode(),
             elements,
-            ...background ? { background } : {}
+            ...background ? { background } : {},
+            animations
         };
     }
 }

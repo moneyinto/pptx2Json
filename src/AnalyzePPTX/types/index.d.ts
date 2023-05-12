@@ -548,7 +548,61 @@ export interface ISlideLayout {
     sldLayout: ISldLayout;
 }
 
+interface ICBhvr {
+    tgtEl: {
+        spTgt: {
+            _spid: string;
+        };
+    };
+}
+
+interface IAnimEffect {
+    cBhvr: ICBhvr;
+    _filter: string;
+}
+
+interface IChildTnLst {
+    seq?: {
+        cTn: ICTn;
+    };
+    par?: IPar | IPar[];
+    animEffect?: IAnimEffect;
+    animMotion?: {
+        cBhvr: ICBhvr;
+        _origin: string;
+        _path: string;
+        _pathEditMode: string;
+        _ptsTypes: string;
+    };
+    set?: {
+        cBhvr: ICBhvr;
+    };
+}
+
+interface ICTn {
+    childTnLst: IChildTnLst;
+    _fill: string;
+    _id: string;
+    _nodeType: "clickEffect" | "afterEffect" | "withEffect";
+    _presetClass: "entr" | "emph" | "exit" | "path";
+    _presetID: string;
+    _presetSubtype: string;
+}
+
+export interface IPar {
+    cTn: ICTn;
+}
+
+interface ITnLst {
+    par: IPar;
+}
+
+interface ITiming {
+    tnLst: ITnLst;
+}
+
 export interface IXSlide {
     cSld: ICSld;
     clrMapOvr: {};
+    timing: ITiming;
 }

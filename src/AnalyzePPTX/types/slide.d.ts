@@ -28,6 +28,16 @@ export interface ISlideBackground {
     gradientRotate?: number;
 }
 
+export interface IPPTAnimation {
+    id: string;
+    elId: string;
+    ani: string;
+    type: "in" | "out" | "attention";
+    duration: number;
+    path?: string;
+    trigger: "click" | "meantime" | "auto";
+}
+
 /**
  * 幻灯片页面
  *
@@ -47,4 +57,5 @@ export interface ISlide {
     viewportRatio?: number;
     elements: IPPTElement[];
     background?: ISlideBackground;
+    animations: IPPTAnimation[];
 }

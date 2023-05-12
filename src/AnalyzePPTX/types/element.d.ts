@@ -27,6 +27,7 @@ export interface IElementPosition {
  * height: 元素高度
  */
 interface IPPTBaseElement {
+    originId?: string;
     id: string;
     name: string;
     left: number;

@@ -48,6 +48,7 @@ export default class GraphicFrame {
 
                 const chartElement: IPPTChartElement = {
                     id: createRandomCode(),
+                    originId: graphicFrame.nvGraphicFramePr.cNvPr._id,
                     fixedRatio: false,
                     left: EMU2PIX(xfrm.off._x),
                     top: EMU2PIX(xfrm.off._y),

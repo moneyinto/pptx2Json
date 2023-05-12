@@ -249,6 +249,7 @@ export default class Shapes {
                 // 文本框
                 shape = {
                     id: createRandomCode(),
+                    originId: sp.nvSpPr.cNvPr._id,
                     type: "text",
                     left: EMU2PIX(xfrm.off._x),
                     top: EMU2PIX(xfrm.off._y),
@@ -265,6 +266,7 @@ export default class Shapes {
                 // 形状
                 shape = {
                     id: createRandomCode(),
+                    originId: sp.nvSpPr.cNvPr._id,
                     fixedRatio: false,
                     left: EMU2PIX(xfrm.off._x),
                     top: EMU2PIX(xfrm.off._y),
