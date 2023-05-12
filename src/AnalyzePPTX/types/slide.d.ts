@@ -42,6 +42,7 @@ export interface ISlideBackground {
  * background?: 页面背景
  */
 export interface ISlide {
+    index?: number;
     id: string;
     viewportRatio?: number;
     elements: IPPTElement[];

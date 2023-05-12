@@ -249,27 +249,35 @@ interface IR {
     rPr: {
         ea?: IEA;
         latin?: IEA;
+        sym?: {
+            _typeface: string;
+        };
         _b?: {};
         _i?: {};
         _u?: {};
         solidFill?: ISolidFill;
         _sz?: string;
+        _strike?: {};
     };
     t: {
         __text: string;
-    }
+    };
 }
 
-interface ITxBody {
-    bodyPr: IBodyPr;
-    p: {
-        endParaRPr: {
-            _altLang: "en-US";
-            _lang: "zh-CN";
-        };
-        r?: IR | IR[];
-        pPr?: IPPr;
+export interface IP {
+    endParaRPr: {
+        _altLang: "en-US";
+        _lang: "zh-CN";
     };
+    r?: IR | IR[];
+    pPr?: IPPr;
+    _lvl?: string;
+}
+
+export interface ITxBody {
+    bodyPr: IBodyPr;
+    p: IP | IP[];
+    lstStyle: ITexStyle;
 }
 
 interface ICNvCxnSpPr {}
@@ -487,15 +495,20 @@ interface ICSld {
     spTree: ISpTree;
 }
 
-interface ILvlPPR {
-    defRPr: {
-        solidFill: ISolidFill;
-        _b?: string;
-        _i?: string;
-        _sz?: string;
-        _u?: string;
-        _strike?: string;
+export interface IDefRpr {
+    latin: {
+        _typeface: string;
     };
+    solidFill: ISolidFill;
+    _b?: string;
+    _i?: string;
+    _sz?: string;
+    _u?: string;
+    _strike?: string;
+}
+
+interface ILvlPPR {
+    defRPr: IDefRpr;
 }
 
 interface ITexStyle {
@@ -512,6 +525,9 @@ interface ITexStyle {
 
 export interface ISldMaster {
     cSld: ICSld;
+    clrMap: {
+        [key: string]: string;
+    };
     txStyles: {
         bodyStyle: ITexStyle;
         otherStyle: ITexStyle;
@@ -519,8 +535,17 @@ export interface ISldMaster {
     };
 }
 
+interface ISldLayout {
+    cSld: ICSld;
+    clrMapOvr: {};
+}
+
 export interface ISlideMaster {
     sldMaster: ISldMaster;
+}
+
+export interface ISlideLayout {
+    sldLayout: ISldLayout;
 }
 
 export interface IXSlide {

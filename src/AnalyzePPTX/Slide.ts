@@ -1,7 +1,7 @@
 
 import JSZip from "jszip";
 import Background from "./Background";
-import { IRelationship, ISldMaster, ITheme, IXSlide } from "./types";
+import { IRelationship, ISldLayout, ISldMaster, ITheme, IXSlide } from "./types";
 import { ISlideBackground } from "./types/slide";
 import Shapes from "./Shapes";
 import { IPPTElement } from "./types/element";
@@ -19,7 +19,8 @@ export default class Slide {
     private _zip: JSZip;
     private _x2js: X2JS;
     private _sldMaster: ISldMaster;
-    constructor(slide: IXSlide, slideRel: { Relationships: { Relationship: IRelationship[] } }, theme: ITheme, index: string, zip: JSZip, x2js: X2JS, sldMaster: ISldMaster) {
+    private _sldLayout: ISldLayout;
+    constructor(slide: IXSlide, slideRel: { Relationships: { Relationship: IRelationship[] } }, theme: ITheme, index: string, zip: JSZip, x2js: X2JS, sldLayout: ISldLayout, sldMaster: ISldMaster) {
         this._slide = slide;
         this._relationships = slideRel.Relationships.Relationship;
         this._theme = theme;
@@ -27,6 +28,7 @@ export default class Slide {
         this._zip = zip;
         this._x2js = x2js;
         this._sldMaster = sldMaster;
+        this._sldLayout = sldLayout;
     }
 
     async getSlide() {
@@ -58,7 +60,7 @@ export default class Slide {
         let elements: IPPTElement[] = [];
         // 形状
         if (this._slide.cSld.spTree.sp) {
-            const sps = new Shapes(this._slide.cSld.spTree.sp, this._theme, this._sldMaster);
+            const sps = new Shapes(this._slide.cSld.spTree.sp, this._theme, this._sldLayout, this._sldMaster);
 
             elements = elements.concat(sps.shapes);
         }
@@ -106,8 +108,9 @@ export default class Slide {
         // 考虑元素层级关系。
 
         // index 保留 看看后面需不需要排序
-        console.log(this._index, this._slide);
+        // console.log(this._index, this._slide);
         return {
+            index: +this._index,
             id: createRandomCode(),
             elements,
             ...background ? { background } : {}
