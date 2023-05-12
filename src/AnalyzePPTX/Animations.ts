@@ -42,6 +42,7 @@ export default class Animations {
                     let elId = "";
                     let ani = "";
                     let path = "";
+                    let duration = 0;
                     if (bPar.cTn._presetClass === "path") {
                         elId = bPar.cTn.childTnLst.animMotion?.cBhvr.tgtEl.spTgt._spid;
                         ani = "custom";
@@ -57,6 +58,7 @@ export default class Animations {
                             }
                         }
                         elId = set.cBhvr?.tgtEl.spTgt._spid || animEffect.cBhvr.tgtEl.spTgt._spid;
+                        duration = +(animEffect.cBhvr ? animEffect.cBhvr.cTn._dur : "0");
                         if (bPar.cTn._presetClass === "emph") {
                             // 强调动画 参数比较多
                             console.log("强调动画", animEffect);
@@ -76,7 +78,7 @@ export default class Animations {
                         elId,
                         type,
                         ani,
-                        duration: 0,
+                        duration,
                         trigger,
                         path
                     };
